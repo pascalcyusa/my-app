@@ -19,6 +19,15 @@ export default function Page() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
+  const projects = [
+    { id: 1, title: "Mechanical Design Project", image: "/images/project1.jpeg" },
+    { id: 2, title: "3D Printing Innovation", image: "/images/project2.jpeg" },
+    { id: 3, title: "Robotics Prototype", image: "/images/project3.jpeg" },
+    { id: 4, title: "Sustainable Engineering", image: "/images/project4.jpeg" },
+    { id: 5, title: "CAD Modeling Showcase", image: "/images/project5.jpeg" },
+    { id: 6, title: "Energy Efficiency Study", image: "/images/project6.jpeg" },
+  ]
+
   return (
     <div className="min-h-screen bg-gray-900 text-white">
       <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? 'bg-gray-900 shadow-lg' : ''}`}>
@@ -61,11 +70,11 @@ export default function Page() {
             >
               <motion.div style={{ scale: imageScale }}>
                 <Image
-                  src="/placeholder.svg?height=400&width=300"
-                  alt="Pascal"
+                  src="/images/pascal-profile.jpeg"
+                  alt="Pascal - Aspiring Mechanical Engineer"
                   width={300}
                   height={400}
-                  className="rounded-lg shadow-xl mx-auto"
+                  className="rounded-lg shadow-xl mx-auto object-cover"
                 />
               </motion.div>
             </motion.div>
@@ -76,9 +85,9 @@ export default function Page() {
           <div className="container mx-auto px-6">
             <h3 className="text-3xl font-bold mb-10">Portfolio</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {[1, 2, 3, 4, 5, 6].map((item) => (
+              {projects.map((project) => (
                 <motion.div
-                  key={item}
+                  key={project.id}
                   className="bg-gray-800 rounded-lg overflow-hidden"
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
@@ -86,15 +95,15 @@ export default function Page() {
                   viewport={{ once: true }}
                 >
                   <Image
-                    src={`/placeholder.svg?height=200&width=300&text=Project+${item}`}
-                    alt={`Project ${item}`}
+                    src={project.image}
+                    alt={project.title}
                     width={300}
                     height={200}
                     className="w-full h-48 object-cover"
                   />
                   <div className="p-4">
-                    <h4 className="text-xl font-semibold mb-2">Project {item}</h4>
-                    <p className="text-gray-400">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <h4 className="text-xl font-semibold mb-2">{project.title}</h4>
+                    <p className="text-gray-400">Innovative mechanical engineering project showcasing design and problem-solving skills.</p>
                   </div>
                 </motion.div>
               ))}

@@ -2,14 +2,18 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { motion, useScroll, useTransform } from 'framer-motion'
+import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion'
 import Image from 'next/image'
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 
 export default function Page() {
   const [isScrolled, setIsScrolled] = useState(false)
   const { scrollYProgress } = useScroll()
   const headerOpacity = useTransform(scrollYProgress, [0, 0.2], [1, 0])
   const imageScale = useTransform(scrollYProgress, [0, 0.5], [1, 1.2])
+  const [hoveredProject, setHoveredProject] = useState<number | null>(null)
+  const [openDialog, setOpenDialog] = useState<number | null>(null)
 
   useEffect(() => {
     const handleScroll = () => {
@@ -20,12 +24,12 @@ export default function Page() {
   }, [])
 
   const projects = [
-    { id: 1, title: "Mechanical Design Project", image: "/images/project1.jpeg" },
-    { id: 2, title: "3D Printing Innovation", image: "/images/project2.jpeg" },
-    { id: 3, title: "Robotics Prototype", image: "/images/project3.jpeg" },
-    { id: 4, title: "Sustainable Engineering", image: "/images/project4.jpeg" },
-    { id: 5, title: "CAD Modeling Showcase", image: "/images/project5.jpeg" },
-    { id: 6, title: "Energy Efficiency Study", image: "/images/project6.jpeg" },
+    { id: 1, title: "Mechanical Design Project", image: "/images/project1.jpeg", description: "An innovative mechanical design project showcasing advanced engineering principles and creative problem-solving." },
+    { id: 2, title: "3D Printing Innovation", image: "/images/project2.jpeg", description: "Exploring the frontiers of 3D printing technology to create complex, functional prototypes for various applications." },
+    { id: 3, title: "Robotics Prototype", image: "/images/project3.jpeg", description: "Developing a cutting-edge robotics prototype designed for efficiency and precision in industrial environments." },
+    { id: 4, title: "Sustainable Engineering", image: "/images/project4.jpeg", description: "Implementing sustainable engineering practices to create eco-friendly solutions for modern challenges." },
+    { id: 5, title: "CAD Modeling Showcase", image: "/images/project5.jpeg", description: "A collection of advanced CAD models demonstrating proficiency in 3D modeling and design optimization." },
+    { id: 6, title: "Energy Efficiency Study", image: "/images/project6.jpeg", description: "Conducting comprehensive energy efficiency studies to improve system performance and reduce environmental impact." },
   ]
 
   return (
@@ -86,26 +90,56 @@ export default function Page() {
             <h3 className="text-3xl font-bold mb-10">Portfolio</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {projects.map((project) => (
-                <motion.div
-                  key={project.id}
-                  className="bg-gray-800 rounded-lg overflow-hidden"
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5 }}
-                  viewport={{ once: true }}
-                >
-                  <Image
-                    src={project.image}
-                    alt={project.title}
-                    width={300}
-                    height={200}
-                    className="w-full h-48 object-cover"
-                  />
-                  <div className="p-4">
-                    <h4 className="text-xl font-semibold mb-2">{project.title}</h4>
-                    <p className="text-gray-400">Innovative mechanical engineering project showcasing design and problem-solving skills.</p>
-                  </div>
-                </motion.div>
+                <Dialog key={project.id} open={openDialog === project.id} onOpenChange={() => setOpenDialog(null)}>
+                  <DialogTrigger asChild>
+                    <motion.div
+                      className="cursor-pointer"
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.5 }}
+                      viewport={{ once: true }}
+                      onHoverStart={() => setHoveredProject(project.id)}
+                      onHoverEnd={() => setHoveredProject(null)}
+                      whileHover={{ scale: 1.05 }}
+                      onClick={() => setOpenDialog(project.id)}
+                    >
+                      <Card className="bg-gray-800 overflow-hidden">
+                        <CardContent className="p-0">
+                          <Image
+                            src={project.image}
+                            alt={project.title}
+                            width={300}
+                            height={200}
+                            className="w-full h-48 object-cover"
+                          />
+                        </CardContent>
+                        <CardHeader>
+                          <CardTitle>{project.title}</CardTitle>
+                          <CardDescription className="text-gray-400">
+                            {project.description.substring(0, 100)}...
+                          </CardDescription>
+                        </CardHeader>
+                      </Card>
+                    </motion.div>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-[425px] bg-gray-800 text-white">
+                    <DialogHeader>
+                      <DialogTitle>{project.title}</DialogTitle>
+                      <DialogDescription className="text-gray-300">
+                        {project.description}
+                      </DialogDescription>
+                    </DialogHeader>
+                    <div className="mt-4">
+                      <Image
+                        src={project.image}
+                        alt={project.title}
+                        width={400}
+                        height={300}
+                        className="w-full h-64 object-cover rounded-lg"
+                      />
+                    </div>
+                  </DialogContent>
+                </Dialog>
               ))}
             </div>
           </div>

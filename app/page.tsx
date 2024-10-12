@@ -1,11 +1,12 @@
-/* eslint-disable prettier/prettier */
 'use client'
 
 import { useState, useEffect } from 'react'
-import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion'
+import { motion, useScroll, useTransform } from 'framer-motion'
 import Image from 'next/image'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel"
+import Autoplay from "embla-carousel-autoplay"
 
 export default function Page() {
   const [isScrolled, setIsScrolled] = useState(false)
@@ -13,7 +14,7 @@ export default function Page() {
   const headerOpacity = useTransform(scrollYProgress, [0, 0.2], [1, 0])
   const imageScale = useTransform(scrollYProgress, [0, 0.5], [1, 1.2])
   const [hoveredProject, setHoveredProject] = useState<number | null>(null)
-  const [openDialog, setOpenDialog] = useState<number | null>(null)
+  const [selectedProject, setSelectedProject] = useState<number | null>(null)
 
   useEffect(() => {
     const handleScroll = () => {
@@ -30,6 +31,13 @@ export default function Page() {
     { id: 4, title: "Sustainable Engineering", image: "/images/project4.jpeg", description: "Implementing sustainable engineering practices to create eco-friendly solutions for modern challenges." },
     { id: 5, title: "CAD Modeling Showcase", image: "/images/project5.jpeg", description: "A collection of advanced CAD models demonstrating proficiency in 3D modeling and design optimization." },
     { id: 6, title: "Energy Efficiency Study", image: "/images/project6.jpeg", description: "Conducting comprehensive energy efficiency studies to improve system performance and reduce environmental impact." },
+  ]
+
+  const researchSlides = [
+    { id: 1, title: "Advanced Materials Research", image: "/images/research1.jpeg" },
+    { id: 2, title: "Renewable Energy Systems", image: "/images/research2.jpeg" },
+    { id: 3, title: "Robotics and Automation", image: "/images/research3.jpg" },
+    { id: 4, title: "Sustainable Manufacturing", image: "/images/research4.jpeg" },
   ]
 
   return (
@@ -90,59 +98,74 @@ export default function Page() {
             <h3 className="text-3xl font-bold mb-10">Portfolio</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {projects.map((project) => (
-                <Dialog key={project.id} open={openDialog === project.id} onOpenChange={() => setOpenDialog(null)}>
-                  <DialogTrigger asChild>
-                    <motion.div
-                      className="cursor-pointer"
-                      initial={{ opacity: 0, y: 20 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.5 }}
-                      viewport={{ once: true }}
-                      onHoverStart={() => setHoveredProject(project.id)}
-                      onHoverEnd={() => setHoveredProject(null)}
-                      whileHover={{ scale: 1.05 }}
-                      onClick={() => setOpenDialog(project.id)}
-                    >
-                      <Card className="bg-gray-800 overflow-hidden">
-                        <CardContent className="p-0">
-                          <Image
-                            src={project.image}
-                            alt={project.title}
-                            width={300}
-                            height={200}
-                            className="w-full h-48 object-cover"
-                          />
-                        </CardContent>
-                        <CardHeader>
-                          <CardTitle>{project.title}</CardTitle>
-                          <CardDescription className="text-gray-400">
-                            {project.description.substring(0, 100)}...
-                          </CardDescription>
-                        </CardHeader>
-                      </Card>
-                    </motion.div>
-                  </DialogTrigger>
-                  <DialogContent className="sm:max-w-[425px] bg-gray-800 text-white">
-                    <DialogHeader>
-                      <DialogTitle>{project.title}</DialogTitle>
-                      <DialogDescription className="text-gray-300">
-                        {project.description}
-                      </DialogDescription>
-                    </DialogHeader>
-                    <div className="mt-4">
+                <motion.div
+                  key={project.id}
+                  className="cursor-pointer"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5 }}
+                  viewport={{ once: true }}
+                  onHoverStart={() => setHoveredProject(project.id)}
+                  onHoverEnd={() => setHoveredProject(null)}
+                  whileHover={{ scale: 1.05 }}
+                  onClick={() => setSelectedProject(project.id)}
+                >
+                  <Card className="bg-gray-800 overflow-hidden">
+                    <CardContent className="p-0">
                       <Image
                         src={project.image}
                         alt={project.title}
-                        width={400}
-                        height={300}
-                        className="w-full h-64 object-cover rounded-lg"
+                        width={300}
+                        height={200}
+                        className="w-full h-48 object-cover"
                       />
-                    </div>
-                  </DialogContent>
-                </Dialog>
+                    </CardContent>
+                    <CardHeader>
+                      <CardTitle>{project.title}</CardTitle>
+                      <CardDescription className="text-gray-400">
+                        {project.description.substring(0, 100)}...
+                      </CardDescription>
+                    </CardHeader>
+                  </Card>
+                </motion.div>
               ))}
             </div>
           </div>
+        </section>
+
+        <section id="research" className="min-h-screen relative overflow-hidden">
+          <Carousel
+            opts={{
+              align: "start",
+              loop: true,
+            }}
+            plugins={[
+              Autoplay({
+                delay: 5000,
+              }),
+            ]}
+            className="w-full h-screen"
+          >
+            <CarouselContent>
+              {researchSlides.map((slide) => (
+                <CarouselItem key={slide.id} className="relative h-screen">
+                  <Image
+                    src={slide.image}
+                    alt={slide.title}
+                    fill
+                    className="object-cover brightness-50"
+                  />
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <h3 className="text-4xl md:text-6xl font-bold text-white text-center px-4">
+                      {slide.title}
+                    </h3>
+                  </div>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious className="hidden md:flex" />
+            <CarouselNext className="hidden md:flex" />
+          </Carousel>
         </section>
 
         <section id="contact" className="py-20 bg-gray-800">
@@ -165,6 +188,30 @@ export default function Page() {
           <p>&copy; 2024 Pascal. All rights reserved.</p>
         </div>
       </footer>
+
+      <Dialog open={selectedProject !== null} onOpenChange={() => setSelectedProject(null)}>
+        <DialogContent className="sm:max-w-[425px] bg-gray-800 text-white">
+          {selectedProject !== null && (
+            <>
+              <DialogHeader>
+                <DialogTitle>{projects[selectedProject - 1].title}</DialogTitle>
+                <DialogDescription className="text-gray-300">
+                  {projects[selectedProject - 1].description}
+                </DialogDescription>
+              </DialogHeader>
+              <div className="mt-4">
+                <Image
+                  src={projects[selectedProject - 1].image}
+                  alt={projects[selectedProject - 1].title}
+                  width={400}
+                  height={300}
+                  className="w-full h-64 object-cover rounded-lg"
+                />
+              </div>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

@@ -1,13 +1,66 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
 import Image from 'next/image'
+import Link from 'next/link'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel"
 import Autoplay from "embla-carousel-autoplay"
-import { MenuIcon, XIcon } from '@heroicons/react/outline'
+import { MenuIcon, XIcon } from 'lucide-react'
+import { cn } from "@/lib/utils"
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+  navigationMenuTriggerStyle,
+} from "@/components/ui/navigation-menu"
+
+const projects = [
+  { id: 1, title: "Mechanical Design Project", image: "/images/project1.jpeg", description: "An innovative mechanical design project showcasing advanced engineering principles and creative problem-solving." },
+  { id: 2, title: "3D Printing Innovation", image: "/images/project2.jpeg", description: "Exploring the frontiers of 3D printing technology to create complex, functional prototypes for various applications." },
+  { id: 3, title: "Robotics Prototype", image: "/images/project3.jpeg", description: "Developing a cutting-edge robotics prototype designed for efficiency and precision in industrial environments." },
+  { id: 4, title: "Sustainable Engineering", image: "/images/project4.jpeg", description: "Implementing sustainable engineering practices to create eco-friendly solutions for modern challenges." },
+  { id: 5, title: "CAD Modeling Showcase", image: "/images/project5.jpeg", description: "A collection of advanced CAD models demonstrating proficiency in 3D modeling and design optimization." },
+  { id: 6, title: "Energy Efficiency Study", image: "/images/project6.jpeg", description: "Conducting comprehensive energy efficiency studies to improve system performance and reduce environmental impact." },
+]
+
+const researchSlides = [
+  { id: 1, title: "Advanced Materials Research", image: "/images/research1.jpeg" },
+  { id: 2, title: "Renewable Energy Systems", image: "/images/research2.jpeg" },
+  { id: 3, title: "Robotics and Automation", image: "/images/research3.jpg" },
+  { id: 4, title: "Sustainable Manufacturing", image: "/images/research4.jpeg" },
+]
+
+const ListItem = React.forwardRef<
+  React.ElementRef<"a">,
+  React.ComponentPropsWithoutRef<"a">
+>(({ className, title, children, ...props }, ref) => {
+  return (
+    <li>
+      <NavigationMenuLink asChild>
+        <a
+          ref={ref}
+          className={cn(
+            "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
+            className
+          )}
+          {...props}
+        >
+          <div className="text-sm font-medium leading-none">{title}</div>
+          <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+            {children}
+          </p>
+        </a>
+      </NavigationMenuLink>
+    </li>
+  )
+})
+ListItem.displayName = "ListItem"
 
 export default function Page() {
   const [isScrolled, setIsScrolled] = useState(false)
@@ -26,22 +79,6 @@ export default function Page() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  const projects = [
-    { id: 1, title: "Mechanical Design Project", image: "/images/project1.jpeg", description: "An innovative mechanical design project showcasing advanced engineering principles and creative problem-solving." },
-    { id: 2, title: "3D Printing Innovation", image: "/images/project2.jpeg", description: "Exploring the frontiers of 3D printing technology to create complex, functional prototypes for various applications." },
-    { id: 3, title: "Robotics Prototype", image: "/images/project3.jpeg", description: "Developing a cutting-edge robotics prototype designed for efficiency and precision in industrial environments." },
-    { id: 4, title: "Sustainable Engineering", image: "/images/project4.jpeg", description: "Implementing sustainable engineering practices to create eco-friendly solutions for modern challenges." },
-    { id: 5, title: "CAD Modeling Showcase", image: "/images/project5.jpeg", description: "A collection of advanced CAD models demonstrating proficiency in 3D modeling and design optimization." },
-    { id: 6, title: "Energy Efficiency Study", image: "/images/project6.jpeg", description: "Conducting comprehensive energy efficiency studies to improve system performance and reduce environmental impact." },
-  ]
-
-  const researchSlides = [
-    { id: 1, title: "Advanced Materials Research", image: "/images/research1.jpeg" },
-    { id: 2, title: "Renewable Energy Systems", image: "/images/research2.jpeg" },
-    { id: 3, title: "Robotics and Automation", image: "/images/research3.jpg" },
-    { id: 4, title: "Sustainable Manufacturing", image: "/images/research4.jpeg" },
-  ]
-
   return (
     <div className="min-h-screen bg-gray-900 text-white">
       <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? 'bg-gray-900 shadow-lg' : ''}`}>
@@ -54,18 +91,54 @@ export default function Page() {
             <h1 className="text-2xl font-bold">PASCAL.</h1>
           </motion.div>
           <div className="hidden md:flex space-x-6">
-            <motion.ul
-              className="flex space-x-6"
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-            >
-              <li><a href="#home" className="hover:text-yellow-400 transition-colors">Home</a></li>
-              <li><a href="#portfolio" className="hover:text-yellow-400 transition-colors">Portfolio</a></li>
-              <li><a href="#projects" className="hover:text-yellow-400 transition-colors">Projects</a></li>
-              <li><a href="#research" className="hover:text-yellow-400 transition-colors">Research</a></li>
-              <li><a href="#contact" className="border border-white px-4 py-2 rounded hover:bg-white hover:text-gray-900 transition-all">CONTACT</a></li>
-            </motion.ul>
+            <NavigationMenu>
+              <NavigationMenuList>
+                <NavigationMenuItem>
+                  <Link href="/#home" legacyBehavior passHref>
+                    <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                      Home
+                    </NavigationMenuLink>
+                  </Link>
+                </NavigationMenuItem>
+                <NavigationMenuItem>
+                  <Link href="/#portfolio" legacyBehavior passHref>
+                    <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                      Portfolio
+                    </NavigationMenuLink>
+                  </Link>
+                </NavigationMenuItem>
+                <NavigationMenuItem>
+                  <NavigationMenuTrigger>Projects</NavigationMenuTrigger>
+                  <NavigationMenuContent>
+                    <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
+                      {projects.map((project) => (
+                        <ListItem
+                          key={project.id}
+                          title={project.title}
+                          href={`/projects#${project.id}`}
+                        >
+                          {project.description.substring(0, 50)}...
+                        </ListItem>
+                      ))}
+                    </ul>
+                  </NavigationMenuContent>
+                </NavigationMenuItem>
+                <NavigationMenuItem>
+                  <Link href="/#research" legacyBehavior passHref>
+                    <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                      Research
+                    </NavigationMenuLink>
+                  </Link>
+                </NavigationMenuItem>
+                <NavigationMenuItem>
+                  <Link href="/#contact" legacyBehavior passHref>
+                    <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                      Contact
+                    </NavigationMenuLink>
+                  </Link>
+                </NavigationMenuItem>
+              </NavigationMenuList>
+            </NavigationMenu>
           </div>
           <div className="md:hidden">
             <button onClick={() => setIsMenuOpen(!isMenuOpen)}>
@@ -76,11 +149,11 @@ export default function Page() {
         {isMenuOpen && (
           <div className="md:hidden bg-gray-900">
             <ul className="flex flex-col space-y-4 p-4">
-              <li><a href="#home" className="hover:text-yellow-400 transition-colors">Home</a></li>
-              <li><a href="#portfolio" className="hover:text-yellow-400 transition-colors">Portfolio</a></li>
-              <li><a href="#projects" className="hover:text-yellow-400 transition-colors">Projects</a></li>
-              <li><a href="#research" className="hover:text-yellow-400 transition-colors">Research</a></li>
-              <li><a href="#contact" className="border border-white px-4 py-2 rounded hover:bg-white hover:text-gray-900 transition-all">CONTACT</a></li>
+              <li><Link href="/#home" className="hover:text-yellow-400 transition-colors">Home</Link></li>
+              <li><Link href="/#portfolio" className="hover:text-yellow-400 transition-colors">Portfolio</Link></li>
+              <li><Link href="/projects" className="hover:text-yellow-400 transition-colors">Projects</Link></li>
+              <li><Link href="/#research" className="hover:text-yellow-400 transition-colors">Research</Link></li>
+              <li><Link href="/#contact" className="border border-white px-4 py-2 rounded hover:bg-white hover:text-gray-900 transition-all">CONTACT</Link></li>
             </ul>
           </div>
         )}

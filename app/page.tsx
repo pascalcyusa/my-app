@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -19,6 +19,7 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu"
+import React from 'react'
 
 const projects = [
   { id: 1, title: "Mechanical Design Project", image: "/images/project1.jpeg", description: "An innovative mechanical design project showcasing advanced engineering principles and creative problem-solving." },
@@ -46,13 +47,13 @@ const ListItem = React.forwardRef<
         <a
           ref={ref}
           className={cn(
-            "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
+            "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-gray-800 hover:text-yellow-400 focus:bg-gray-800 focus:text-yellow-400",
             className
           )}
           {...props}
         >
-          <div className="text-sm font-medium leading-none">{title}</div>
-          <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+          <div className="text-sm font-medium leading-none text-white">{title}</div>
+          <p className="line-clamp-2 text-sm leading-snug text-gray-300">
             {children}
           </p>
         </a>
@@ -79,6 +80,11 @@ export default function Page() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
+  const customTriggerStyle = cn(
+    navigationMenuTriggerStyle(),
+    "bg-gray-900 text-white hover:bg-gray-800 hover:text-yellow-400"
+  )
+
   return (
     <div className="min-h-screen bg-gray-900 text-white">
       <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? 'bg-gray-900 shadow-lg' : ''}`}>
@@ -91,18 +97,18 @@ export default function Page() {
             <h1 className="text-2xl font-bold">PASCAL.</h1>
           </motion.div>
           <div className="hidden md:flex space-x-6">
-            <NavigationMenu>
-              <NavigationMenuList>
+            <NavigationMenu className="text-white">
+              <NavigationMenuList className="bg-gray-900">
                 <NavigationMenuItem>
                   <Link href="/#home" legacyBehavior passHref>
-                    <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                    <NavigationMenuLink className={customTriggerStyle}>
                       Home
                     </NavigationMenuLink>
                   </Link>
                 </NavigationMenuItem>
                 <NavigationMenuItem>
                   <Link href="/#portfolio" legacyBehavior passHref>
-                    <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                    <NavigationMenuLink className={customTriggerStyle}>
                       Portfolio
                     </NavigationMenuLink>
                   </Link>
@@ -110,7 +116,7 @@ export default function Page() {
                 <NavigationMenuItem>
                   <NavigationMenuTrigger>Projects</NavigationMenuTrigger>
                   <NavigationMenuContent>
-                    <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
+                    <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] bg-gray-900 rounded-md border border-gray-800">
                       {projects.map((project) => (
                         <ListItem
                           key={project.id}
@@ -125,14 +131,14 @@ export default function Page() {
                 </NavigationMenuItem>
                 <NavigationMenuItem>
                   <Link href="/#research" legacyBehavior passHref>
-                    <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                    <NavigationMenuLink className={customTriggerStyle}>
                       Research
                     </NavigationMenuLink>
                   </Link>
                 </NavigationMenuItem>
                 <NavigationMenuItem>
                   <Link href="/#contact" legacyBehavior passHref>
-                    <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                    <NavigationMenuLink className={customTriggerStyle}>
                       Contact
                     </NavigationMenuLink>
                   </Link>

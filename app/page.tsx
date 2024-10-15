@@ -7,9 +7,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel"
 import Autoplay from "embla-carousel-autoplay"
+import { MenuIcon, XIcon } from '@heroicons/react/outline'
 
 export default function Page() {
   const [isScrolled, setIsScrolled] = useState(false)
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
   const { scrollYProgress } = useScroll()
   const headerOpacity = useTransform(scrollYProgress, [0, 0.2], [1, 0])
   const imageScale = useTransform(scrollYProgress, [0, 0.5], [1, 1.2])
@@ -51,19 +53,37 @@ export default function Page() {
           >
             <h1 className="text-2xl font-bold">PASCAL.</h1>
           </motion.div>
-          <motion.ul
-            className="flex space-x-6"
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-          >
-            <li><a href="#home" className="hover:text-yellow-400 transition-colors">Home</a></li>
-            <li><a href="#portfolio" className="hover:text-yellow-400 transition-colors">Portfolio</a></li>
-            <li><a href="#projects" className="hover:text-yellow-400 transition-colors">Projects</a></li>
-            <li><a href="#research" className="hover:text-yellow-400 transition-colors">Research</a></li>
-            <li><a href="#contact" className="border border-white px-4 py-2 rounded hover:bg-white hover:text-gray-900 transition-all">CONTACT</a></li>
-          </motion.ul>
+          <div className="hidden md:flex space-x-6">
+            <motion.ul
+              className="flex space-x-6"
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+            >
+              <li><a href="#home" className="hover:text-yellow-400 transition-colors">Home</a></li>
+              <li><a href="#portfolio" className="hover:text-yellow-400 transition-colors">Portfolio</a></li>
+              <li><a href="#projects" className="hover:text-yellow-400 transition-colors">Projects</a></li>
+              <li><a href="#research" className="hover:text-yellow-400 transition-colors">Research</a></li>
+              <li><a href="#contact" className="border border-white px-4 py-2 rounded hover:bg-white hover:text-gray-900 transition-all">CONTACT</a></li>
+            </motion.ul>
+          </div>
+          <div className="md:hidden">
+            <button onClick={() => setIsMenuOpen(!isMenuOpen)}>
+              {isMenuOpen ? <XIcon className="h-6 w-6" /> : <MenuIcon className="h-6 w-6" />}
+            </button>
+          </div>
         </nav>
+        {isMenuOpen && (
+          <div className="md:hidden bg-gray-900">
+            <ul className="flex flex-col space-y-4 p-4">
+              <li><a href="#home" className="hover:text-yellow-400 transition-colors">Home</a></li>
+              <li><a href="#portfolio" className="hover:text-yellow-400 transition-colors">Portfolio</a></li>
+              <li><a href="#projects" className="hover:text-yellow-400 transition-colors">Projects</a></li>
+              <li><a href="#research" className="hover:text-yellow-400 transition-colors">Research</a></li>
+              <li><a href="#contact" className="border border-white px-4 py-2 rounded hover:bg-white hover:text-gray-900 transition-all">CONTACT</a></li>
+            </ul>
+          </div>
+        )}
       </header>
 
       <main>
